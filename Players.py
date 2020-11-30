@@ -22,45 +22,84 @@ class Teams:
     def printTeamPlayers(self):
         print(self.teamName + " :\n\nPlayers:\n")
         for player in self.playersOnTeam:
-            print(player.displayData())
+            player.displayCurrData()
+            print("\n")
 
-
+    def printLastTeamPlayers(self):
+        print(self.teamName + " :\n\nPlayers:\n")
+        for player in self.lastSeasonPlayers:
+            player.displayLastData()
+            print("\n")
 
 # Stats for players need to be
 # 'Name', 'FTeam', 'Salary', 'Age', 'Pos', 'GP', 'G', 'A', 'P', 'PIM', '+/-'
 class Players:
     @staticmethod
-    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim, plusMinus):
-        self.name = name
-        self.position = position
-        self.age = age
-        self.formerTeam = formerTeam
-        self.salary = salary
+    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim, plusMinus, twefthStat):
+        if position == "G":
+            # name, former ,salary, age, position, games played, wins, loses, win%, Shutouts, goals agnst, save percent
+            self.name = name
+            self.position = position
+            self.age = age
+            self.formerTeam = formerTeam
+            self.salary = salary
 
-        self.last_points = points
-        self.last_goals = goals
-        self.last_assists = assists
-        self.last_plusMinus = plusMinus
-        self.last_gamesPlayed = gamesPlayed
-        self.last_pim = pim
+            self.last_winPercent = points
+            self.last_wins = goals
+            self.last_losses = assists
+            self.last_goalsAgainst = plusMinus
+            self.last_gamesPlayed = gamesPlayed
+            self.last_shutOuts = pim
+            self.last_savePercent = twefthStat
 
-        self.currentTeam = formerTeam
-        self.curr_points = 0
-        self.curr_goals = 0
-        self.curr_assists = 0
-        self.curr_plusMinus = 0
-        self.curr_gamesPlayed = 0
-        self.curr_pim = 0
+            self.currentTeam = formerTeam
+            self.curr_winPercent = 0
+            self.curr_wins = 0
+            self.curr_losses = 0
+            self.curr_goalsAgainst = 0
+            self.curr_gamesPlayed = 0
+            self.curr_shutOuts = 0
+            self.curr_savePercent = 0
+
+        else:
+            self.name = name
+            self.position = position
+            self.age = age
+            self.formerTeam = formerTeam
+            self.salary = salary
+
+            self.last_points = points
+            self.last_goals = goals
+            self.last_assists = assists
+            self.last_plusMinus = plusMinus
+            self.last_gamesPlayed = gamesPlayed
+            self.last_pim = pim
+            self.last_twefth_stat = twefthStat
+
+            self.currentTeam = formerTeam
+            self.curr_points = 0
+            self.curr_goals = 0
+            self.curr_assists = 0
+            self.curr_plusMinus = 0
+            self.curr_gamesPlayed = 0
+            self.curr_pim = 0
+            self.curr_twefth_stat = 0
 
     def displayLastData(self):
-        print("Position: " + self.__class__.__name__ + ", Name: " + str(self.name) + ", Points: " + str(
-            self.last_points) + ", Goals: " + str(self.last_goals) + ", Assists: " + str(self.last_assists) + ", Plus/Minus: " + str(
-            self.last_plusMinus) + " Former Team: "+ str(self.formerTeam) )
+        if self.__class__.__name__ == "Goalie":
+            self.displayLastGoalieStats()
+        else:
+            print("Position: " + self.__class__.__name__ + ", Name: " + str(self.name) + ", Points: " + str(
+                self.last_points) + ", Goals: " + str(self.last_goals) + ", Assists: " + str(self.last_assists) + ", Plus/Minus: " + str(
+                self.last_plusMinus) + " Former Team: "+ str(self.formerTeam) )
 
     def displayCurrData(self):
-        print("Position: " + self.__class__.__name__ + ", Name: " + str(self.name) + ", Points: " + str(
-            self.curr_points) + ", Goals: " + str(self.curr_goals) + ", Assists: " + str(self.curr_assists) + ", Plus/Minus: " + str(
-            self.curr_plusMinus) + " Current Team: "+ str(self.formerTeam) )
+        if self.__class__.__name__ == "Goalie":
+            self.displayCurrGoalieStats()
+        else:
+            print("Position: " + self.__class__.__name__ + ", Name: " + str(self.name) + ", Points: " + str(
+                self.curr_points) + ", Goals: " + str(self.curr_goals) + ", Assists: " + str(self.curr_assists) + ", Plus/Minus: " + str(
+                self.curr_plusMinus) + " Current Team: "+ str(self.formerTeam) )
 
     def makeStatsZero(self):
         # This Function will be how to set the new season stats, for now set player stats to 0
@@ -75,49 +114,82 @@ class Players:
 
 
 class Center(Players):
-    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim, plusMinus):
+    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim, plusMinus, twefthStat):
         Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim,
-                         plusMinus)
+                         plusMinus,twefthStat)
 
 
 class LeftWinger(Players):
-    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim, plusMinus):
+    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim, plusMinus, twefthStat):
         Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim,
-                         plusMinus)
+                         plusMinus,twefthStat)
 
 
 class RightWinger(Players):
-    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim, plusMinus):
+    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim, plusMinus, twefthStat):
         Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim,
-                         plusMinus)
+                         plusMinus, twefthStat)
 
 
 class Defenseman(Players):
-    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim, plusMinus):
+    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim, plusMinus, twefthStat):
         Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim,
-                         plusMinus)
+                         plusMinus, twefthStat)
 
 
 # need to add the variables stored in goalie, such as save percent and GAA
 # As of right now goalies have the same stats as normal players, will be changed in the second sprint
 class Goalie(Players):
-    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim, plusMinus):
+    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim, plusMinus, twefthStat):
         Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, pim,
-                         plusMinus)
+                         plusMinus, twefthStat)
 
+    def displayCurrGoalieStats(self):
+        print("Goalie Stats:::\nName: " + self.name +"\nTeam: " + str(self.currentTeam) + "\nGames Played: " + str(self.curr_gamesPlayed)+ "\nWins: "+str(self.curr_wins)+
+              "\nLosses: " +str(self.curr_losses)+ "\nWin Percentage: "+ str(self.curr_winPercent)+ "\nShutOuts: " +str(self.curr_shutOuts) + "\nGoals Against: " +str(self.curr_goalsAgainst)
+              +"\nSave Percent: " + str(self.curr_savePercent))
+
+    def displayLastGoalieStats(self):
+        print("Goalie Stats:::\nName: " + self.name + "\nTeam: " + str(self.formerTeam) + "\nGames Played: " + str(
+            self.last_gamesPlayed) + "\nWins: " + str(self.last_wins) +
+              "\nLosses: " + str(self.last_losses) + "\nWin Percentage: " + str(
+            self.last_winPercent) + "\nShutOuts: " + str(self.last_shutOuts) + "\nGoals Against: " + str(
+            self.last_goalsAgainst)
+              + "\nSave Percent: " + str(self.last_savePercent))
 
 def main():
-    # 'Name', 'FTeam', 'Salary', 'Age', 'Pos', 'GP', 'G', 'A', 'P', 'PIM', '+/-'
-    playerData = ["Solis", "Knights", 1200, 23, "Center", 5, 4, 3, 7, 6, .8]
-
+    # name, former ,salary, age, position, games played, wins, loses, win%, Shutouts, goals agnst, save percent'
+    goalie = ["Tormum", "Knights", 1200, 23, "G", 5, 4, 1, .75, 3, 1, .98]
     factory = PlayerFactory.createPlayerFactory
+    newGoalie = factory.createPlayer(goalie)
+    playerData = ["Solis", "Knights", 1200, 23, "C", 5, 4, 3, 7, 6, .8,12]
+    leftWing = ["Solis", "Knights", 1200, 23, "LW", 5, 4, 3, 7, 6, .8,12]
     newCenter = factory.createPlayer(playerData)
-    newCenter.displayData()
-
+    newLW = factory.createPlayer(leftWing)
     Anahiem = Teams("Anahiem")
     Anahiem.playersOnTeam.append(newCenter)
-    thisPlayer = Anahiem.playersOnTeam[0]
-    thisPlayer.displayData()
+    Anahiem.playersOnTeam.append(newLW)
+    Anahiem.playersOnTeam.append(newGoalie)
+    Anahiem.printLastTeamPlayers()
+
+
+
+    return 0
+#      #Name', 'FTeam', 'Salary', 'Age', 'Pos', 'GP', 'G', 'A', 'P', 'PIM', '+/-'
+#     # playerData = ["Solis", "Knights", 1200, 23, "Center", 5, 4, 3, 7, 6, .8]
+#     # leftWing = ["Solis", "Knights", 1200, 23, "LeftWinger", 5, 4, 3, 7, 6, .8]
+#     #
+#     # factory = PlayerFactory.createPlayerFactory
+#     # newCenter = factory.createPlayer(playerData)
+#     # newCenter.displayData()
+#     # newLW = factory.createPlayer(playerData)
+#     #
+#     # Anahiem = Teams("Anahiem")
+#     # Anahiem.playersOnTeam.append(newCenter)
+#     # Anahiem.playersOnTeam.append(newLW)
+#     # Anahiem.newSeasonPlayerStats()
+#     # Anahiem.playersOnTeam[0].displayData()
+#     # Anahiem.playersOnTeam[1].displayData()
 
 
 if __name__ == "__main__":
