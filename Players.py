@@ -6,8 +6,6 @@ import PlayerFactory
 
 
 class Teams:
-
-
     def __init__(self, teamName, Lst):
         self.teamName = teamName
         self.playersOnTeam = Lst
@@ -38,7 +36,7 @@ class Teams:
 # 'Name', 'FTeam', 'Salary', 'Age', 'Pos', 'GP', 'G', 'A', 'P', '+/-', 'PPG', 'GWG'
 class Players:
     @staticmethod
-    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat):   # twefthStat = GWG
+    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick):   # twefthStat = GWG
         if position == "G":
             # name, former ,salary, age, position, games played, wins, loses, win%, Shutouts, goals agnst, save percent
             self.name = name
@@ -54,6 +52,7 @@ class Players:
             self.last_gamesPlayed = gamesPlayed
             self.last_shutOuts = plusMinus
             self.last_savePercent = twefthStat
+            self.last_draftPick = draftPick
 
             self.currentTeam = formerTeam
             self.curr_winPercent = 0
@@ -63,6 +62,7 @@ class Players:
             self.curr_gamesPlayed = 0
             self.curr_shutOuts = 0
             self.curr_saves = 0
+            self.curr_draftPick = 0
 
         else:
             self.name = name
@@ -78,6 +78,7 @@ class Players:
             self.last_gamesPlayed = gamesPlayed
             self.last_PPG = PPG
             self.last_GWG = twefthStat
+            self.last_draftPick = draftPick
 
             self.currentTeam = formerTeam
             self.curr_points = 0
@@ -87,6 +88,7 @@ class Players:
             self.curr_gamesPlayed = 0
             self.curr_PPG = 0
             self.curr_GWG = 0
+            self.curr_draftPick = 0
 
     def displayLastData(self):
         if self.__class__.__name__ == "Goalie":
@@ -118,30 +120,30 @@ class Players:
 
 
 class Center(Players):
-    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat):
-        Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat)
+    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick):
+        Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick)
 
 
 class LeftWinger(Players):
-    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat):
-        Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat)
+    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick):
+        Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick)
 
 
 class RightWinger(Players):
-    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat):
-        Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat)
+    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick):
+        Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick)
 
 
 class Defenseman(Players):
-    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat):
-        Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat)
+    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick):
+        Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick)
 
 
 # need to add the variables stored in goalie, such as save percent and GAA
 # As of right now goalies have the same stats as normal players, will be changed in the second sprint
 class Goalie(Players):
-    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat):
-        Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat)
+    def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick):
+        Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick)
 
     def displayCurrGoalieStats(self):
         print("Goalie Stats:::\nName: " + self.name +"\nTeam: " + str(self.currentTeam) + "\nGames Played: " + str(self.curr_gamesPlayed)+ "\nWins: "+str(self.curr_wins)+
@@ -154,22 +156,23 @@ class Goalie(Players):
               "\nLosses: " + str(self.last_loses) + "\nWin Percentage: " + str(
             self.last_winPercent) + "\nShutOuts: " + str(self.last_shutOuts) + "\nGoals Against: " + str(
             self.last_goalsAgainst)
-              + "\nSave Percent: " + str(self.last_savePercent))
+              + "\nSave Percent: " + str(self.last_savePercent)+ "\nDraft Pick: " + str(self.last_draftPick) )
 
 def main():
     # name, former ,salary, age, position, games played, wins, loses, win%, Shutouts, goals agnst, save percent'
-    goalie = ["Tormum", "Knights", 1200, 23, "G", 5, 4, 1, .75, 3, 1, .98]
+    goalie = ["Tormum", "Knights", 1200, 23, "G", 5, 4, 1, .75, 3, 1, .98, 3]
     factory = PlayerFactory.createPlayerFactory
     newGoalie = factory.createPlayer(goalie)
-    playerData = ["Solis", "Knights", 1200, 23, "C", 5, 4, 3, 7, 6, .8,12]
-    leftWing = ["Solis", "Knights", 1200, 23, "LW", 5, 4, 3, 7, 6, .8,12]
+    playerData = ["Solis", "Knights", 1200, 23, "C", 5, 4, 3, 7, 6, .8,12, 1]
+    leftWing = ["Solis", "Knights", 1200, 23, "LW", 5, 4, 3, 7, 6, .8,12, 2]
     newCenter = factory.createPlayer(playerData)
     newLW = factory.createPlayer(leftWing)
-    Anahiem = Teams("Anahiem")
-    Anahiem.playersOnTeam.append(newCenter)
-    Anahiem.playersOnTeam.append(newLW)
-    Anahiem.playersOnTeam.append(newGoalie)
-    Anahiem.printLastTeamPlayers()
+    newGoalie.displayLastData()
+    #Anahiem = Teams("Anahiem")
+    #Anahiem.playersOnTeam.append(newCenter)
+    #Anahiem.playersOnTeam.append(newLW)
+    #Anahiem.playersOnTeam.append(newGoalie)
+    #Anahiem.printLastTeamPlayers()
 
 
 
