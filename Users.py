@@ -1,8 +1,11 @@
 import random
+import time
 import PlayerFactory
 from Players import Center, Goalie, RightWinger, LeftWinger, Defenseman, Teams
 from Update_Players_List import importFile
 from Simulate_Season import simulateSeason
+from tkinter import *
+from tkinter import ttk
 
 def getPlayer(pos, team, num):
     count = 0
@@ -54,7 +57,7 @@ def checkInput(res, correctList):   # checks if res is inside of list correctLis
     return res
 
 
-def main():
+def playGame():
     undraftedPlayers, undraftedGoalies = importFile("NHLplayerstats_2019-20.csv", "NHLgoaliestats_2019-20.csv")
 
     for i in range(len(undraftedPlayers)):
@@ -85,7 +88,7 @@ def main():
     print("Once the season has finished you will be able to evaluate how your team preformed.")
 
     print("*************** Pick your Team ***************")     # pick team name
-    print("Input a number 1-32 or the letter 'r' for random")
+    print("Input a number 1-32")
     i = 0
     while i < len(teamsList):                                                                          # prints list of teams
         print(i+1, ". ", teamsList[i], "     ", i+2, ". ", teamsList[i+1], "     ", i+3, ". ",
@@ -136,10 +139,12 @@ def main():
             draftOrder.append(teamsList[rando])
             randTeam.append(rando)
 
-    print("*************** Draft Order ***************")
-    print(draftOrder)
+    print("*************** Draft Order ***************", flush=True)
+    print(draftOrder, flush=True)
+    time.sleep(1)
 
-    print("*************** Draft Begins ***************")
+    print("*************** Draft Begins ***************", flush=True)
+    time.sleep(.1)
     poslst = ['C', 'LW', 'RW', 'D', 'D', 'G']
     pos = []
     while len(pos) < 32:        # creates a list for each team of what positions they need
@@ -158,8 +163,8 @@ def main():
                 draft.append(draftOrder[::-1][j])
 
     for i in range(len(draft)):   # loops through the entire draft order and simulates draft
-        print("***********************************************")
-        print("Team:", draft[i])
+        print("***********************************************", flush=True)
+        print("Team:", draft[i], flush=True)
 
         Ready = False    # Get rid of "Ready = False" once below is complete
         if draft[i] == userTeam or Ready is True:       # if current team drafting is Users team
@@ -208,21 +213,23 @@ def main():
                 undraftedGoalies = order(undraftedGoalies, 'W')
                 player = undraftedGoalies[1]
                 player.append((len(teamRosters[j])+1, (i + 1) - (32 * (len(teamRosters[j])))))
-                print("Player Selected:", position, player[0])
+                print("Player Selected:", position, player[0], flush=True)
                 teamRosters[j].append(player)     # adds player to team's players list
                 undraftedGoalies.remove(player)  # removes player from undrafted list
 
             else:                           # case for any other player position
                 player = order(sort(undraftedPlayers, 'Pos', position), 'P')[1]
                 player.append((len(teamRosters[j])+1, (i + 1) - (32 * (len(teamRosters[j])))))
-                print("Player Selected:", position, player[0])
+                print("Player Selected:", position, player[0], flush=True)
                 teamRosters[j].append(player)     # adds player to team's players list
                 undraftedPlayers.remove(player)  # removes player from undrafted list
+            time.sleep(.25)
 
     for x in range(len(teamRosters)):         # prints each teams' full roster (just names)
-        print(teamsList[x], ": ")
+        print(teamsList[x], ": ", flush=True)
         for y in range(len(teamRosters[x])):
-            print("    ", teamRosters[x][y][0])
+            print("    ", teamRosters[x][y][0], flush=True)
+        time.sleep(1)
 
     factory = PlayerFactory.createPlayerFactory         # Create factory
     teamObjectList = []
@@ -256,14 +263,14 @@ def main():
     '''
     teamsList = list of each team's name in alphabetical order
     teamRosters = list of each teamm's roster
-        ex: teamsList[0] = "Anahiem Ducks" 
+        ex: teamsList[0] = "Anahiem Ducks"
             teamRosters[0] = [[Ducks player1 name, former team, salary, age, position,....other statistics],
                         [Ducks player2 name, former team, salary, age, position,....other statistics],
                         [Ducks player3 name, former team, salary, age, position,....other statistics],
                         [Ducks player4 name, former team, salary, age, position,....other statistics],
                         [Ducks player5 name, former team, salary, age, position,....other statistics],
                         [Ducks player6 name, former team, salary, age, position,....other statistics],
-    
+
     For now just read in the following stats until I figure out which other stats I want to use:
     ['Name', 'FTeam', 'Salary', 'Age', 'Pos', 'GP', 'G', 'A', 'P', 'PIM', '+/-']
     Those are just the first 11 stats of the list. Therefor: teamRosters[0][0] = 'Name'
@@ -271,4 +278,20 @@ def main():
                                                              teamRosters[0][10] = '+/-'
     '''
 
-main()
+
+def exitGame():
+    print("exiting game")
+    exit()
+
+root = Tk()
+root.title("Be a GM")
+root.geometry('450x400')
+frame = ttk.Frame(root, width=300,height=300).grid(column=0,row=0)
+image = PhotoImage(file='BeGMimg.png')
+label = ttk.Label(frame, text='start img')
+label['image'] = image
+label.grid(column=0,row=0,columnspan=2)
+startGame = ttk.Button(frame, text="Start Game", command=playGame).grid(column=0,row=1,padx=10,pady=10)
+exitGame = ttk.Button(frame, text="ExitGame", command=exitGame).grid(column=1,row=1,padx=10)
+
+root.mainloop()

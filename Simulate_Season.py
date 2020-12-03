@@ -1,4 +1,5 @@
 import random
+import time
 from Players import Center, Goalie, RightWinger, LeftWinger, Defenseman, Teams
 from Strategy import Game, Strategy, StrategyA
 
@@ -194,24 +195,25 @@ def simulateSeason(teamObjectList, userTeamName):
         if team1.teamName == userTeamName or team2.teamName == userTeamName:
             for i in range(len(gameStats)):
                 if i == 0:
-                    print(team1.teamName, ": ")
+                    print(team1.teamName, ": ", flush=True)
                 else:
-                    print(team2.teamName, ": ")
+                    print(team2.teamName, ": ", flush=True)
                 for j in range(len(gameStats[i])):
                     if gameStats[i][j][0][1] == "G":
-                        print("    ", gameStats[i][j][0][0], gameStats[i][j][0][1], ":")
-                        print("     Goals Against:", gameStats[i][j][0][2])
-                        print("     Saves:", gameStats[i][j][0][3])
-                        print(" ")
+                        print("    ", gameStats[i][j][0][0], gameStats[i][j][0][1], ":", flush=True)
+                        print("     Goals Against:", gameStats[i][j][0][2], flush=True)
+                        print("     Saves:", gameStats[i][j][0][3], flush=True)
+                        print(" ", flush=True)
                     else:
-                        print("    ", gameStats[i][j][0][0], gameStats[i][j][0][1], ":")
-                        print("     Points:", gameStats[i][j][0][2])
-                        print("     Goals:", gameStats[i][j][0][3])
-                        print("     Assist:", gameStats[i][j][0][4])
-                        print("     PPG:", gameStats[i][j][0][5])
-                        print("     GWG:", gameStats[i][j][0][6])
-                        print("     +/-:", gameStats[i][j][0][7])
-                        print(" ")
+                        print("    ", gameStats[i][j][0][0], gameStats[i][j][0][1], ":", flush=True)
+                        print("     Points:", gameStats[i][j][0][2], flush=True)
+                        print("     Goals:", gameStats[i][j][0][3], flush=True)
+                        print("     Assist:", gameStats[i][j][0][4], flush=True)
+                        print("     PPG:", gameStats[i][j][0][5], flush=True)
+                        print("     GWG:", gameStats[i][j][0][6], flush=True)
+                        print("     +/-:", gameStats[i][j][0][7], flush=True)
+                        print(" ", flush=True)
+            time.sleep(2)
 
 
             # ********* END of SEASON **********
