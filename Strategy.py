@@ -5,6 +5,10 @@ import PlayerFactory
 from Players import Center, Goalie, RightWinger, LeftWinger, Defenseman, Teams
 #from Simulate_Season import order
 
+'''
+STRATEGY PATTERN
+'''
+
 def getPlayer(pos, team):
     for i in range(len(team)):
         if team[i].position == pos:
