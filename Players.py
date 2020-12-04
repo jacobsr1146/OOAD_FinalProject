@@ -21,10 +21,10 @@ class Teams:
 
     # Print all players on any team and show stats
     def printTeamPlayers(self):
-        print(self.teamName + " :\n\nPlayers:\n")
+        print(" ")
+        print(self.teamName + " :", self.wins, "-", self.loses)
         for player in self.playersOnTeam:
             player.displayCurrData()
-            #print("\n")
 
     def printLastTeamPlayers(self):
         print(self.teamName + " :\n\nPlayers:\n")
@@ -102,9 +102,13 @@ class Players:
         if self.__class__.__name__ == "Goalie":
             self.displayCurrGoalieStats()
         else:
-            print("Position: " + self.__class__.__name__ + ", Name: " + str(self.name) + ", \nPoints: " + str(
-                self.curr_points) + ", \nGoals: " + str(self.curr_goals) + ", \nAssists: " + str(self.curr_assists) + ", \nPlus/Minus: " + str(
-                self.curr_plusMinus) + " \nCurrent Team: "+ str(self.currentTeam) )
+            print("    ", self.name, self.position, ":")
+            print("       ", "Points:", self.curr_points)
+            print("       ", "Goals:", self.curr_goals)
+            print("       ", "Assist:", self.curr_assists)
+            print("       ", "Plus/Minus:", self.curr_plusMinus)
+            print("       ", "PPG:", self.curr_PPG)
+            print("       ", "GWG:", self.curr_GWG)
 
     def makeStatsZero(self):
         # This Function will be how to set the new season stats, for now set player stats to 0
@@ -146,9 +150,14 @@ class Goalie(Players):
         Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick)
 
     def displayCurrGoalieStats(self):
-        print("Goalie Stats:::\nName: " + self.name +"\nTeam: " + str(self.currentTeam) + "\nGames Played: " + str(self.curr_gamesPlayed)+ "\nWins: "+str(self.curr_wins)+
-              "\nLosses: " +str(self.curr_loses)+ "\nWin Percentage: "+ str(self.curr_winPercent)+ "\nShutOuts: " +str(self.curr_shutOuts) + "\nGoals Against Average: " +str(self.curr_goalsAgainst/self.curr_gamesPlayed)
-              +"\nSave Percent: " + str(self.curr_saves/(self.curr_saves+self.curr_goalsAgainst)))
+        print("    ", self.name, self.position, ":")
+        print("       ", "Wins:", self.curr_wins)
+        print("       ", "Loses:", self.curr_loses)
+        print("       ", "Games Played:", self.curr_gamesPlayed)
+        print("       ", "Win %:", self.curr_winPercent)
+        print("       ", "Shutouts:", self.curr_shutOuts)
+        print("       ", "GAA:", self.curr_goalsAgainst/self.curr_gamesPlayed)
+        print("       ", "Save %:", self.curr_saves/(self.curr_saves+self.curr_goalsAgainst))
 
     def displayLastGoalieStats(self):
         print("Goalie Stats:::\nName: " + self.name + "\nTeam: " + str(self.formerTeam) + "\nGames Played: " + str(
