@@ -145,6 +145,11 @@ class Defenseman(Players):
 
 # need to add the variables stored in goalie, such as save percent and GAA
 # As of right now goalies have the same stats as normal players, will be changed in the second sprint
+
+'''
+DECORATOR PATTERN
+'''
+
 class Goalie(Players):
     def __init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick):
         Players.__init__(self, name, formerTeam, salary, age, position, gamesPlayed, goals, assists, points, plusMinus, PPG, twefthStat, draftPick)
