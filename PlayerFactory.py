@@ -1,6 +1,8 @@
 from Players import Center, Goalie, RightWinger, LeftWinger, Defenseman
 
-
+'''
+FACTORY PATTERN
+'''
 # 'Name', 'FTeam', 'Salary', 'Age', 'Pos', 'GP', 'G', 'A', 'P', 'PIM', '+/-'
 
 
