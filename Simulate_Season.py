@@ -1,7 +1,7 @@
 import random
 import time
 from Players import Center, Goalie, RightWinger, LeftWinger, Defenseman, Teams
-from Strategy import Game, Strategy, StrategyA
+from Strategy import Game, Strategy, StrategyA, StrategyB, StrategyC
 
 
 
@@ -38,7 +38,7 @@ def orderAssist(lst):
     return newList
 
 
-def simulateSeason(teamObjectList, userTeamName):
+def simulateSeason(teamObjectList, userTeamName, res):
     # ********** Creating Schedule **********
     scheduleList = []
     for i in range(len(teamObjectList)):    # creates list of each team 82 time (length = 82 * 32)
@@ -68,31 +68,36 @@ def simulateSeason(teamObjectList, userTeamName):
     for match in range(len(schedule)):
         team1 = schedule[match][0]
         team2 = schedule[match][1]
-        #[], [], [], [], [], []
-        gameStats = [[[], [], [], [], [], []], [[], [], [], [], [], []]]          # keeping track of current game statistics
+        display = False
+        gameStats = []         # keeping track of current game statistics
         for i in range(len(team1.playersOnTeam)):       # [name, pos, goalsAgainst, saves]
             if team1.playersOnTeam[i].position == "G":
-                gameStats[0][i].append([team1.playersOnTeam[i].name,
+                gameStats.append([team1.playersOnTeam[i].name,
                                         team1.playersOnTeam[i].position,
                                         0, 0])
-            else:                                       # [name, pos, points, goals, assist, PPG, GWG, +/-]
-                gameStats[0][i].append([team1.playersOnTeam[i].name,
-                                        team1.playersOnTeam[i].position,
-                                        0, 0, 0, 0, 0, 0])
         for i in range(len(team2.playersOnTeam)):
             if team2.playersOnTeam[i].position == "G":
-                gameStats[1][i].append([team2.playersOnTeam[i].name,
+                gameStats.append([team2.playersOnTeam[i].name,
                                         team2.playersOnTeam[i].position,
                                         0, 0])
-            else:
-                gameStats[1][i].append([team2.playersOnTeam[i].name,
-                                        team2.playersOnTeam[i].position,
-                                        0, 0, 0, 0, 0, 0])
+        if res in ["Y", "y"]:
+            if team1.teamName == userTeamName or team2.teamName == userTeamName:
+                display = True
+                print("Game: ", team1.teamName, "vs.", team2.teamName)
+                time.sleep(2)
+                print("Final Score: ")
+                print("    ", team1.teamName, ": ", team1goals)
+                print("    ", team2.teamName, ": ", team2goals)
+                time.sleep(.1)
 
-        game.strategy = StrategyA()                 # randomly picks a strategy to simulate the current game
-        '''
-        CODE NEEDED by Jacob
-        '''
+                                                  # randomly picks a strategy to simulate the current game
+        randnum = random.randint(0, 100)
+        if randnum < 33:
+            game.strategy = StrategyA()
+        elif randnum < 66:
+            game.strategy = StrategyB()
+        else:
+            game.strategy = StrategyC()
 
         gameResults = game.play(team1, team2)      # simulates game with strategy pattern
         team1goals = gameResults[0]
@@ -104,6 +109,9 @@ def simulateSeason(teamObjectList, userTeamName):
         teams = [team1, team2]
         teamgoals = [team1goals, team2goals]
         for x in range(len(teams)):             # creates temp list of current team without goalie
+            if display == True:
+                print(" ")
+                print(teams[x].teamName, ":")
             teamplayers = []
             for i in range(len(teams[x].playersOnTeam)):
                 if teams[x].playersOnTeam[i].position != "G":
@@ -114,77 +122,75 @@ def simulateSeason(teamObjectList, userTeamName):
                 for j in range(len(teams[x].playersOnTeam)):
                     if teams[x].playersOnTeam[j] == goalScorer:
                         teams[x].playersOnTeam[j].curr_goals = teams[x].playersOnTeam[j].curr_goals + 1   # updating goal scorer's curr_goals
-                        gameStats[x][j][0][3] = gameStats[x][j][0][3] + 1
+                        goalScorer = teams[x].playersOnTeam[j]
                         teams[x].playersOnTeam[j].curr_points = teams[x].playersOnTeam[j].curr_points + 1
-                        gameStats[x][j][0][2] = gameStats[x][j][0][2] + 1
                         if random.randint(1, 100) < 10:
                             teams[x].playersOnTeam[j].curr_PPG = teams[x].playersOnTeam[j].curr_PPG + 1   # updating goal scorer's curr_PPGs
-                            gameStats[x][j][0][5] = gameStats[x][j][0][5] + 1
                         if x == 0 and i == team2goals:
                             teams[x].playersOnTeam[j].curr_GWG = teams[x].playersOnTeam[j].curr_GWG + 1   # updating goal scorer's curr_GWGs
-                            gameStats[x][j][0][6] = gameStats[x][j][0][6] + 1
                         if x == 1 and i == team1goals:
                             teams[x].playersOnTeam[j].curr_GWG = teams[x].playersOnTeam[j].curr_GWG + 1   # updating goal scorer's curr_GWGs
-                            gameStats[x][j][0][6] = gameStats[x][j][0][6] + 1
                 assist = []
+                assistDisplay = []
                 while len(assist) == 0:
                     assist = random.choices(orderAssist(teamplayers.copy()), weights=(50, 40, 30, 20, 10), k=2)   # finding assist for each goal
-                    for num in range(len(assist)):
-                        if goalScorer in assist:
-                            assist.remove(goalScorer)
+                    while goalScorer in assist:
+                        assist.remove(goalScorer)
                 if len(assist) > 1:
                     if assist[0] == assist[1]:
                         assist.pop()
-                for k in range(len(assist)-1):
-                    for j in range(len(teams[x].playersOnTeam)-1):
+                for k in range(len(assist)):
+                    for j in range(len(teams[x].playersOnTeam)):
                         if teams[x].playersOnTeam[j] == assist[k]:
                             teams[x].playersOnTeam[j].curr_assists = teams[x].playersOnTeam[j].curr_assists + 1     # updating assister's curr_assist
-                            gameStats[x][j][0][4] = gameStats[x][j][0][4] + 1
+                            assistDisplay.append(teams[x].playersOnTeam[j])
                             teams[x].playersOnTeam[j].curr_points = teams[x].playersOnTeam[j].curr_points + 1
-                            gameStats[x][j][0][2] = gameStats[x][j][0][2] + 1
+
+                if display == True:
+                    print("   Goal:", goalScorer.name)
+                    for a in range(len(assist)):
+                        if a == 0:
+                            print("   Assist: ", assistDisplay[a].name)
+                        else:
+                            print("           ", assistDisplay[a].name)
+                    time.sleep(.1)
 
         # +/- and Games Played:
         for i in range(len(team1.playersOnTeam)):
             if team1.playersOnTeam[i].position != "G":
                 team1.playersOnTeam[i].curr_plusMinus = team1.playersOnTeam[i].curr_plusMinus + team1goals - team2goals
-                gameStats[0][i][0][7] = gameStats[0][i][0][7] + team1goals - team2goals
             team1.playersOnTeam[i].curr_gamesPlayed = team1.playersOnTeam[i].curr_gamesPlayed + 1
         for i in range(len(team2.playersOnTeam)):
             if team2.playersOnTeam[i].position != "G":
                 team2.playersOnTeam[i].curr_plusMinus = team2.playersOnTeam[i].curr_plusMinus + team2goals - team1goals
-                gameStats[1][i][0][7] = gameStats[1][i][0][7] + team2goals - team1goals
             team2.playersOnTeam[i].curr_gamesPlayed = team2.playersOnTeam[i].curr_gamesPlayed + 1
-        # Team Records
-        if team1goals > team2goals:
-            team1.wins = team1.wins + 1
-            team2.loses = team2.loses + 1
-        else:
-            team2.wins = team1.wins + 1
-            team1.loses = team2.loses + 1
+
         # Goalie Statistics
         for i in range(len(team1.playersOnTeam)):       #finding goalies on each team
             if team1.playersOnTeam[i].position == "G":
                 goalie1 = team1.playersOnTeam[i]
-                key1 = i
             if team2.playersOnTeam[i].position == "G":
                 goalie2 = team2.playersOnTeam[i]
-                key2 = i
         # Wins and Loses
         if team1goals > team2goals:
             goalie1.curr_wins = goalie1.curr_wins + 1
             goalie2.curr_loses = goalie2.curr_loses + 1
+            team1.wins = team1.wins + 1
+            team2.loses = team2.loses + 1
         else:
             goalie2.curr_wins = goalie2.curr_wins + 1
             goalie1.curr_loses = goalie1.curr_loses + 1
+            team2.wins = team2.wins + 1
+            team1.loses = team1.loses + 1
         # Goals Against, Saves, and Win%
         goalie1.curr_goalsAgainst = goalie1.curr_goalsAgainst + team2goals
-        gameStats[0][key1][0][2] = gameStats[0][key1][0][2] + team2goals
+        gameStats[0][2] = gameStats[0][2] + team2goals
         goalie2.curr_goalsAgainst = goalie2.curr_goalsAgainst + team1goals
-        gameStats[1][key2][0][2] = gameStats[1][key2][0][2] + team1goals
+        gameStats[1][2] = gameStats[1][2] + team1goals
         goalie1.curr_saves = goalie1.curr_saves + (team2shots - team2goals)
-        gameStats[0][key1][0][3] = gameStats[0][key1][0][3] + (team2shots - team2goals)
+        gameStats[0][3] = gameStats[0][3] + (team2shots - team2goals)
         goalie2.curr_saves = goalie2.curr_saves + (team1shots - team1goals)
-        gameStats[1][key2][0][3] = gameStats[1][key2][0][3] + (team1shots - team1goals)
+        gameStats[1][3] = gameStats[1][3] + (team1shots - team1goals)
         goalie1.curr_winPercent = goalie1.curr_wins/goalie1.curr_gamesPlayed
         goalie2.curr_winPercent = goalie2.curr_wins/goalie2.curr_gamesPlayed
         if team1goals == 0:
@@ -192,28 +198,19 @@ def simulateSeason(teamObjectList, userTeamName):
         if team2goals == 0:
             goalie1.curr_shutOuts = goalie1.curr_shutOuts + 1
 
-        if team1.teamName == userTeamName or team2.teamName == userTeamName:
+        if display == True:
+            print(" ")
+            time.sleep(.1)
             for i in range(len(gameStats)):
                 if i == 0:
-                    print(team1.teamName, ": ", flush=True)
+                    print(team1.teamName, ": ")
                 else:
-                    print(team2.teamName, ": ", flush=True)
-                for j in range(len(gameStats[i])):
-                    if gameStats[i][j][0][1] == "G":
-                        print("    ", gameStats[i][j][0][0], gameStats[i][j][0][1], ":", flush=True)
-                        print("     Goals Against:", gameStats[i][j][0][2], flush=True)
-                        print("     Saves:", gameStats[i][j][0][3], flush=True)
-                        print(" ", flush=True)
-                    else:
-                        print("    ", gameStats[i][j][0][0], gameStats[i][j][0][1], ":", flush=True)
-                        print("     Points:", gameStats[i][j][0][2], flush=True)
-                        print("     Goals:", gameStats[i][j][0][3], flush=True)
-                        print("     Assist:", gameStats[i][j][0][4], flush=True)
-                        print("     PPG:", gameStats[i][j][0][5], flush=True)
-                        print("     GWG:", gameStats[i][j][0][6], flush=True)
-                        print("     +/-:", gameStats[i][j][0][7], flush=True)
-                        print(" ", flush=True)
-            time.sleep(2)
+                    print(team2.teamName, ": ")
+                if gameStats[i][1] == "G":
+                    print("    ", gameStats[i][0], gameStats[i][1], ":")
+                    print("     Goals Against:", gameStats[i][2])
+                    print("     Saves:", gameStats[i][3])
+                    print(" ")
 
 
             # ********* END of SEASON **********
@@ -299,3 +296,4 @@ def testing2():
 
 #testing()
 #testing2()
+
